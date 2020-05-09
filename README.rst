@@ -1,17 +1,9 @@
 progettobioinf
 =========================================================================================
 |travis| |sonar_quality| |sonar_maintainability| |codacy|
-|code_climate_maintainability| |pip| |downloads|
+|code_climate_maintainability|
 
 Progetto di bioinformatica
-
-How do I install this package?
-----------------------------------------------
-As usual, just download it using pip:
-
-.. code:: shell
-
-    pip install progettobioinf
 
 Tests Coverage
 ----------------------------------------------

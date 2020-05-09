@@ -1,2 +1,0 @@
-# progettoBioinf
-Progetto di bioinformatica 

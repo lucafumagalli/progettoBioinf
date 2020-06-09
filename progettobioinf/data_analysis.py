@@ -6,10 +6,10 @@ from scipy.stats import spearmanr
 from scipy.stats import pearsonr
 from minepy import MINE
 import numpy as np
+import seaborn as sns
 
 p_value_threshold = 0.01
 correlation_threshold = 0.05
-scores = {}
 
 def class_rate_hist(epigenomes, labels, cell_line):
     for region, x in epigenomes.items():
@@ -130,4 +130,26 @@ def extremely_correlated(epigenomes):
         region:sorted(score, key=lambda x: np.abs(x[0]), reverse=True)
         for region, score in scores.items()
     }
-def seaborn_plot():
+    return scores
+
+def seaborn_plot_most_correlated(epigenomes, labels, scores, cell_line):
+    for region, x in epigenomes.items():
+        _, firsts, seconds = list(zip(*scores[region][:3]))
+        columns = list(set(firsts+seconds))
+        print(f"Most correlated features from {region} epigenomes")
+        sns.pairplot(pd.concat([
+            x[columns],
+            labels[region],
+        ], axis=1), hue=labels[region].columns[0])
+        plt.savefig(cell_line + '/seaborn_plot_' + region +'_most.png')
+
+def seaborn_plot_least_correlated(epigenomes, labels, scores, cell_line):
+    for region, x in epigenomes.items():
+        _, firsts, seconds = list(zip(*scores[region][-3:]))
+        columns = list(set(firsts+seconds))
+        print(f"Least correlated features from {region} epigenomes")
+        sns.pairplot(pd.concat([
+            x[columns],
+            labels[region],
+        ], axis=1), hue=labels[region].columns[0])
+        plt.savefig(cell_line + '/seaborn_plot_' + region +'_least.png')

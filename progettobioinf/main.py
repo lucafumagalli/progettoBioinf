@@ -8,4 +8,6 @@ if __name__ == "__main__":
     drop_constant_features(epigenomes)
     robust_zscoring(epigenomes)
     run_correlation_tests(epigenomes, labels)
-    extremely_correlated(epigenomes)
+    scores = extremely_correlated(epigenomes)
+    seaborn_plot_most_correlated(epigenomes, labels, scores, cell_line)
+    seaborn_plot_least_correlated(epigenomes, labels, scores, cell_line)

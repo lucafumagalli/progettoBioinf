@@ -9,6 +9,9 @@ import numpy as np
 import seaborn as sns
 from scipy.stats import entropy
 from sklearn.metrics.pairwise import euclidean_distances
+from sklearn.decomposition import PCA
+from MulticoreTSNE import MulticoreTSNE as UTSNE
+from multiprocessing import cpu_count
 
 p_value_threshold = 0.01
 correlation_threshold = 0.05
@@ -197,3 +200,73 @@ def get_top_most_different_tuples(epigenomes, labels, cell_line):
             axis.set_title(f"{column_i} and {column_j}")
         fig.tight_layout()
         plt.savefig(cell_line + '/top_most_different.png')
+
+def get_tasks(epigenomes, labels):
+    tasks = {
+        "x":[
+            *[
+                val.values
+                for val in epigenomes.values()
+            ],
+        ],
+        "y":[
+            *[
+                val.values.ravel()
+                for val in labels.values()
+            ],
+        ],
+        "titles":[
+            "Epigenomes promoters",
+            "Epigenomes enhancers",
+        ]
+    }
+    xs = tasks["x"]
+    ys = tasks["y"]
+    titles = tasks["titles"]
+
+    assert len(xs) == len(ys) == len(titles)
+
+    for x, y in zip(xs, ys):
+        assert x.shape[0] == y.shape[0]
+    return xs, ys, titles
+
+def pca(x:np.ndarray, n_components:int=2)->np.ndarray:
+    return PCA(n_components=n_components, random_state=42).fit_transform(x)
+
+def pca_plot(epigenomes, labels, cell_line):
+    colors = np.array([
+        "tab:blue",
+        "tab:red",
+    ])
+
+    xs, ys, titles = get_tasks(epigenomes, labels)
+
+    fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(32, 16))
+    for x, y, title, axis in tqdm(zip(xs, ys, titles, axes.flatten()), desc="Computing PCAs", total=len(xs)):
+        axis.scatter(*pca(x).T, s=1, color=colors[y])
+        axis.xaxis.set_visible(False)
+        axis.yaxis.set_visible(False)
+        axis.set_title(f"PCA decomposition - {title}")
+    plt.savefig(cell_line + '/PCA.png')
+
+def ulyanov_tsne(x:np.ndarray, perplexity:int, dimensionality_threshold:int=50, n_components:int=2):
+    if x.shape[1] > dimensionality_threshold:
+        x = pca(x, n_components=dimensionality_threshold)
+    return UTSNE(n_components=n_components, perplexity=perplexity, n_jobs=cpu_count(), random_state=42, verbose=True).fit_transform(x)
+
+def tsne_plot(epigenomes, labels, cell_line):
+    colors = np.array([
+        "tab:blue",
+        "tab:orange",
+    ])
+
+    xs, ys, titles = get_tasks(epigenomes, labels)
+    for perplexity in tqdm((30, 40), desc="Running perplexities"):
+        fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(40, 20))
+        for x, y, title, axis in tqdm(zip(xs, ys, titles, axes.flatten()), desc="Computing TSNEs", total=len(xs)):
+            axis.scatter(*ulyanov_tsne(x, perplexity=perplexity).T, s=1, color=colors[y])
+            axis.xaxis.set_visible(False)
+            axis.yaxis.set_visible(False)
+            axis.set_title(f"TSNE decomposition - {title}")
+        fig.tight_layout()
+        plt.savefig(cell_line + '/TSNE' + str(perplexity) + '.png')

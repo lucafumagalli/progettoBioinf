@@ -7,6 +7,7 @@ from scipy.stats import pearsonr
 from minepy import MINE
 import numpy as np
 import seaborn as sns
+from scipy.stats import entropy
 
 p_value_threshold = 0.01
 correlation_threshold = 0.05

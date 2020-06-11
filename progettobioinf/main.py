@@ -2,6 +2,7 @@ from models_A549 import *
 from retrieving_data import retrieving_data
 from data_analysis import *
 from train import train
+from result import barplot
 if __name__ == "__main__":
     cell_line = 'A549'
     models = []
@@ -19,6 +20,8 @@ if __name__ == "__main__":
     # pca_plot(epigenomes, labels, cell_line)
     # tsne_plot(epigenomes, labels, cell_line)
     modelperc, kwargsperc = perceptron()
-    models.append(modelperc)
-    kwargs.append(kwargsperc)
-    train(epigenomes, labels, models, kwargs, 'promoters')
+    modeltree, kwargstree = decision_tree()
+    models.extend([modelperc, modeltree])
+    kwargs.extend([kwargsperc, kwargstree])
+    df = train(epigenomes, labels, models, kwargs, 'promoters', cell_line)
+    barplot(df, cell_line)

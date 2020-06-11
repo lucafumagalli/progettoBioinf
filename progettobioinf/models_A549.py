@@ -8,9 +8,6 @@ from sklearn.tree import DecisionTreeClassifier
 splits = 3
 holdouts = StratifiedShuffleSplit(n_splits=splits, test_size=0.2, random_state=42)
 
-models = []
-kwargs = []
-
 ####### PERCEPTRON #######
 def perceptron():
     perceptron = Sequential([
@@ -23,7 +20,7 @@ def perceptron():
         loss="binary_crossentropy"
     )
 
-    kwargs.append(dict(
+    kwargs = dict(
         epochs=600,
         batch_size=1024,
         validation_split=0.1,
@@ -33,7 +30,7 @@ def perceptron():
             EarlyStopping(monitor="val_loss", mode="min", patience=50),
             ktqdm(leave_outer=False)
         ]
-    ))
+    )
     return perceptron, kwargs
 
 ###### DECISION TREE #####
@@ -44,6 +41,6 @@ def decision_tree():
         random_state=42,
         class_weight="balanced"
     )
-    kwargs.append({})
+    kwargs = {}
     return decision_tree, kwargs
 

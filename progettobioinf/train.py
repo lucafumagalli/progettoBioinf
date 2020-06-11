@@ -3,6 +3,9 @@ import os
 from tqdm.auto import tqdm
 import pandas as pd
 import numpy as np
+from sklearn.metrics import accuracy_score, balanced_accuracy_score, roc_auc_score, average_precision_score
+from sanitize_ml_labels import sanitize_ml_labels
+import compress_json
 
 def report(promoters_labels_true:np.ndarray, promoters_labels_pred:np.ndarray)->np.ndarray:
     integer_metrics = accuracy_score, balanced_accuracy_score
@@ -29,20 +32,19 @@ def precomputed(results, model:str, holdout:int)->bool:
         (df.holdout == holdout)
     ).any()
 
-def train(epigenomes, labels, models, kwargs, region):
+def train(epigenomes, labels, models, kwargs, region, cell_line):
     epigenomes = epigenomes[region].values
     labels = labels[region].values
     splits = 3
     holdouts = StratifiedShuffleSplit(n_splits=splits, test_size=0.2, random_state=42)
 
-    if os.path.exists("results.json"):
-        results = compress_json.local_load("results.json")
+    if os.path.exists(cell_line + "/results.json"):
+        results = compress_json.local_load(cell_line + "/results.json")
     else:
         results = []
         
     for i, (train, test) in tqdm(enumerate(holdouts.split(epigenomes, labels)), total=splits, desc="Computing holdouts", dynamic_ncols=True):
         for model, params in tqdm(zip(models, kwargs), total=len(models), desc="Training models", leave=False, dynamic_ncols=True):
-            print(type(epigenomes[train]))
             model_name = (
                 model.__class__.__name__
                 if model.__class__.__name__ != "Sequential"
@@ -63,7 +65,9 @@ def train(epigenomes, labels, models, kwargs, region):
                 "holdout":i,
                 **report(labels[test], model.predict(epigenomes[test]))
             })
-            compress_json.local_dump(results, "results.json")
+            compress_json.local_dump(results, cell_line + "/results.json")
 
     df = pd.DataFrame(results)
     df = df.drop(columns=["holdout"])
+    return df
+

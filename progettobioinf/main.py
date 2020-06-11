@@ -1,17 +1,24 @@
-from models import *
+from models_A549 import *
 from retrieving_data import retrieving_data
 from data_analysis import *
+from train import train
 if __name__ == "__main__":
     cell_line = 'A549'
+    models = []
+    kwargs = []
     epigenomes, labels = retrieving_data(cell_line)
-    class_rate_hist(epigenomes, labels, cell_line)
-    drop_constant_features(epigenomes)
-    robust_zscoring(epigenomes)
-    run_correlation_tests(epigenomes, labels)
-    scores = extremely_correlated(epigenomes)
-    seaborn_plot_most_correlated(epigenomes, labels, scores, cell_line)
-    seaborn_plot_least_correlated(epigenomes, labels, scores, cell_line)
-    get_top_most_different(epigenomes, labels, cell_line)
-    get_top_most_different_tuples(epigenomes, labels, cell_line)
-    pca_plot(epigenomes, labels, cell_line)
-    tsne_plot(epigenomes, labels, cell_line)
+    # class_rate_hist(epigenomes, labels, cell_line)
+    # drop_constant_features(epigenomes)
+    # robust_zscoring(epigenomes)
+    # run_correlation_tests(epigenomes, labels)
+    # scores = extremely_correlated(epigenomes)
+    # seaborn_plot_most_correlated(epigenomes, labels, scores, cell_line)
+    # seaborn_plot_least_correlated(epigenomes, labels, scores, cell_line)
+    # get_top_most_different(epigenomes, labels, cell_line)
+    # get_top_most_different_tuples(epigenomes, labels, cell_line)
+    # pca_plot(epigenomes, labels, cell_line)
+    # tsne_plot(epigenomes, labels, cell_line)
+    modelperc, kwargsperc = perceptron()
+    models.append(modelperc)
+    kwargs.append(kwargsperc)
+    train(epigenomes, labels, models, kwargs, 'promoters')

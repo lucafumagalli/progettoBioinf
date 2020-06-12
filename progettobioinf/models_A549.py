@@ -6,6 +6,7 @@ from keras_tqdm import TQDMNotebookCallback as ktqdm
 from sklearn.tree import DecisionTreeClassifier
 from tqdm.auto import tqdm
 from sklearn.ensemble import RandomForestClassifier
+from multiprocessing import cpu_count
 
 splits = 3
 holdouts = StratifiedShuffleSplit(n_splits=splits, test_size=0.2, random_state=42)

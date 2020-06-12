@@ -6,7 +6,7 @@ from PIL import Image
 import PIL
 import numpy as np
 import shutil
-def barplot(df:pd.DataFrame, cell_line):
+def barplot(df:pd.DataFrame, cell_line, region):
 
     barplots(
         df,
@@ -30,5 +30,5 @@ def barplot(df:pd.DataFrame, cell_line):
     img_np_array = [np.asarray(i.resize(min_shape)) for i in imgs]
     imgs_comb = np.vstack(img_np_array)
     imgs_comb = PIL.Image.fromarray( imgs_comb)
-    imgs_comb.save(cell_line + '/models_scores.png')
+    imgs_comb.save(cell_line + '/models_scores' + region + '.png')
     shutil.rmtree('barplots', ignore_errors=True)

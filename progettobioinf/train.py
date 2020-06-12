@@ -38,8 +38,8 @@ def train(epigenomes, labels, models, kwargs, region, cell_line):
     splits = 3
     holdouts = StratifiedShuffleSplit(n_splits=splits, test_size=0.2, random_state=42)
 
-    if os.path.exists(cell_line + "/results.json"):
-        results = compress_json.local_load(cell_line + "/results.json")
+    if os.path.exists(cell_line + "/results_" + region + ".json"):
+        results = compress_json.local_load(cell_line + "/results_" + region + ".json")
     else:
         results = []
         
@@ -65,7 +65,7 @@ def train(epigenomes, labels, models, kwargs, region, cell_line):
                 "holdout":i,
                 **report(labels[test], model.predict(epigenomes[test]))
             })
-            compress_json.local_dump(results, cell_line + "/results.json")
+            compress_json.local_dump(results, cell_line + "/results_" + region + ".json")
 
     df = pd.DataFrame(results)
     df = df.drop(columns=["holdout"])

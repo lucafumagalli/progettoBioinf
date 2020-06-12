@@ -30,5 +30,5 @@ def barplot(df:pd.DataFrame, cell_line, region):
     img_np_array = [np.asarray(i.resize(min_shape)) for i in imgs]
     imgs_comb = np.vstack(img_np_array)
     imgs_comb = PIL.Image.fromarray( imgs_comb)
-    imgs_comb.save(cell_line + '/models_scores' + region + '.png')
+    imgs_comb.save(cell_line + '/models_scores_' + region + '.png')
     shutil.rmtree('barplots', ignore_errors=True)

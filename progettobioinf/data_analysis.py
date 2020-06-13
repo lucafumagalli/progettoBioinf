@@ -143,23 +143,25 @@ def extremely_correlated(epigenomes):
 def seaborn_plot_most_correlated(epigenomes, labels, scores, cell_line):
     for region, x in epigenomes.items():
         _, firsts, seconds = list(zip(*scores[region][:3]))
+        labels2 = pd.DataFrame(labels[region])
         columns = list(set(firsts+seconds))
         print(f"Most correlated features from {region} epigenomes")
         sns.pairplot(pd.concat([
-            x[columns],
-            labels[region],
-        ], axis=1), hue=labels[region].columns[0])
+            x[columns].reset_index(drop=True),
+            labels2.reset_index(drop=True),
+        ], axis=1), hue=labels2.columns[0])
         plt.savefig(cell_line + '/seaborn_plot_' + region +'_most.png')
 
 def seaborn_plot_least_correlated(epigenomes, labels, scores, cell_line):
     for region, x in epigenomes.items():
         _, firsts, seconds = list(zip(*scores[region][-3:]))
+        labels2 = pd.DataFrame(labels[region])
         columns = list(set(firsts+seconds))
         print(f"Least correlated features from {region} epigenomes")
         sns.pairplot(pd.concat([
-            x[columns],
-            labels[region],
-        ], axis=1), hue=labels[region].columns[0])
+            x[columns].reset_index(drop=True),
+            labels2.reset_index(drop=True),
+        ], axis=1), hue=labels2.columns[0])
         plt.savefig(cell_line + '/seaborn_plot_' + region +'_least.png')
 
 def get_top_most_different(epigenomes, labels, cell_line):
@@ -176,7 +178,7 @@ def get_top_most_different(epigenomes, labels, cell_line):
             mask = ((x[column] < tail) & (x[column] > head)).values
             
             cleared_x = x[column][mask]
-            cleared_y = labels[region].values.ravel()[mask]
+            cleared_y = labels[region].ravel()[mask]
             
             cleared_x[cleared_y==0].hist(ax=axis, bins=20)
             cleared_x[cleared_y==1].hist(ax=axis, bins=20)
@@ -239,7 +241,7 @@ def pca(x:np.ndarray, n_components:int=2)->np.ndarray:
 def pca_plot(epigenomes, labels, cell_line):
     colors = np.array([
         "tab:blue",
-        "tab:red",
+        "tab:orange",
     ])
 
     xs, ys, titles = get_tasks(epigenomes, labels)
@@ -264,7 +266,7 @@ def tsne_plot(epigenomes, labels, cell_line):
     ])
 
     xs, ys, titles = get_tasks(epigenomes, labels)
-    for perplexity in tqdm((2, 3), desc="Running perplexities"):
+    for perplexity in tqdm((30, 40), desc="Running perplexities"):
         fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(40, 20))
         for x, y, title, axis in tqdm(zip(xs, ys, titles, axes.flatten()), desc="Computing TSNEs", total=len(xs)):
             axis.scatter(*ulyanov_tsne(x, perplexity=perplexity).T, s=1, color=colors[y])

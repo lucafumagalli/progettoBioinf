@@ -39,8 +39,8 @@ def precomputed(results, model:str, holdout:int)->bool:
     ).any()
 
 def train(epigenomes, labels, models, kwargs, region, cell_line):
-    epigenomes = pd.DataFrame(epigenomes[region].values)
-    labels = pd.DataFrame(labels[region])
+    epigenomes = epigenomes[region].values
+    labels = labels[region]
     print(labels)
     splits = 3
     holdouts = StratifiedShuffleSplit(n_splits=splits, test_size=0.2, random_state=42)
@@ -146,3 +146,7 @@ def train_sequence(epigenomes, labels, genome, cell_line, region, models):
                 }
             })
             compress_json.local_dump(results, cell_line + "/sequence_" + region + ".json")
+    
+    df = pd.DataFrame(results)
+    df = df.drop(columns=["holdout"])
+    return df

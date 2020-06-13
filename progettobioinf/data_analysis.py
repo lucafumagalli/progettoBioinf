@@ -25,6 +25,7 @@ def class_rate_hist(epigenomes, labels, cell_line):
 
     fig, axes = plt.subplots(ncols=2, figsize=(10, 5))
     for axis, (region, y) in zip(axes.ravel(), labels.items()):
+        y = pd.DataFrame(y)
         y.hist(ax=axis, bins=3)
         axis.set_title("Classes count in " + region)
     plt.savefig(cell_line + '/classes_rate.png')
@@ -57,8 +58,10 @@ def robust_zscoring(epigenomes):
 
 def pearson_test(epigenomes, labels, uncorrelated):
     for region, x in epigenomes.items():
+        x = pd.DataFrame(x)
         for column in tqdm(x.columns, desc=f"Running Pearson test for {region}", dynamic_ncols=True, leave=False):
-            correlation, p_value = pearsonr(x[column].values.ravel(), labels[region].values.ravel())
+            #correlation, p_value = pearsonr(x[column].values.ravel(), labels[region].values.ravel())
+            correlation, p_value = pearsonr(x[column].ravel(), labels[region].ravel())
             if p_value > p_value_threshold:
                 print(region, column, correlation)
                 uncorrelated[region].add(column)
@@ -66,7 +69,7 @@ def pearson_test(epigenomes, labels, uncorrelated):
 def spearman_test(epigenomes, labels, uncorrelated):
     for region, x in epigenomes.items():
         for column in tqdm(x.columns, desc=f"Running Spearman test for {region}", dynamic_ncols=True, leave=False):
-            correlation, p_value = spearmanr(x[column].values.ravel(), labels[region].values.ravel())
+            correlation, p_value = spearmanr(x[column].ravel(), labels[region].ravel())
             if p_value > p_value_threshold:
                 print(region, column, correlation)
                 uncorrelated[region].add(column)
@@ -75,7 +78,7 @@ def mine_test(epigenomes, labels, uncorrelated):
     for region, x in epigenomes.items():
         for column in tqdm(uncorrelated[region], desc=f"Running MINE test for {region}", dynamic_ncols=True, leave=False):
             mine = MINE()
-            mine.compute_score(x[column].values.ravel(), labels[region].values.ravel())
+            mine.compute_score(x[column].ravel(), labels[region].ravel())
             score = mine.mic()
             if score < correlation_threshold:
                 print(region, column, score)
@@ -205,13 +208,13 @@ def get_tasks(epigenomes, labels):
     tasks = {
         "x":[
             *[
-                val.values
+                val
                 for val in epigenomes.values()
             ],
         ],
         "y":[
             *[
-                val.values.ravel()
+                val.ravel()
                 for val in labels.values()
             ],
         ],
@@ -246,7 +249,7 @@ def pca_plot(epigenomes, labels, cell_line):
         axis.scatter(*pca(x).T, s=1, color=colors[y])
         axis.xaxis.set_visible(False)
         axis.yaxis.set_visible(False)
-        axis.set_title(f"PCA decomposition - {title}")
+        axis.set_title(f"PCA decomposition - {title}", fontsize = 25)
     plt.savefig(cell_line + '/PCA.png')
 
 def ulyanov_tsne(x:np.ndarray, perplexity:int, dimensionality_threshold:int=50, n_components:int=2):
@@ -261,12 +264,12 @@ def tsne_plot(epigenomes, labels, cell_line):
     ])
 
     xs, ys, titles = get_tasks(epigenomes, labels)
-    for perplexity in tqdm((30, 40), desc="Running perplexities"):
+    for perplexity in tqdm((2, 3), desc="Running perplexities"):
         fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(40, 20))
         for x, y, title, axis in tqdm(zip(xs, ys, titles, axes.flatten()), desc="Computing TSNEs", total=len(xs)):
             axis.scatter(*ulyanov_tsne(x, perplexity=perplexity).T, s=1, color=colors[y])
             axis.xaxis.set_visible(False)
             axis.yaxis.set_visible(False)
-            axis.set_title(f"TSNE decomposition - {title}")
+            axis.set_title(f"TSNE decomposition - {title}", fontsize = 25)
         fig.tight_layout()
         plt.savefig(cell_line + '/TSNE' + str(perplexity) + '.png')

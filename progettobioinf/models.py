@@ -1,5 +1,5 @@
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Input, BatchNormalization, Activation, Dropout
+from tensorflow.keras.layers import Dense, Input, BatchNormalization, Activation, Dropout, Flatten
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.model_selection import StratifiedShuffleSplit
 from keras_tqdm import TQDMNotebookCallback as ktqdm
@@ -7,6 +7,9 @@ from sklearn.tree import DecisionTreeClassifier
 from tqdm.auto import tqdm
 from sklearn.ensemble import RandomForestClassifier
 from multiprocessing import cpu_count
+from tensorflow.keras.layers import Conv2D, Reshape
+from tensorflow.keras.metrics import AUC
+
 
 splits = 3
 holdouts = StratifiedShuffleSplit(n_splits=splits, test_size=0.2, random_state=42)
@@ -126,3 +129,32 @@ def ffnn():
         ]
     )
     return ffnn, kwargs
+
+## CNN ##
+def cnn():
+    cnn = Sequential([
+        Input(shape=(200, 4)),
+        Reshape((200, 4, 1)),
+        Conv2D(64, kernel_size=(10, 2), activation="relu"),
+        Conv2D(64, kernel_size=(10, 2), activation="relu"),
+        Dropout(0.3),
+        Conv2D(32, kernel_size=(10, 2), strides=(2, 1), activation="relu"),
+        Conv2D(32, kernel_size=(10, 1), activation="relu"),
+        Conv2D(32, kernel_size=(10, 1), activation="relu"),
+        Dropout(0.3),
+        Flatten(),
+        Dense(32, activation="relu"),
+        Dense(16, activation="relu"),
+        Dense(1, activation="sigmoid")
+    ], "CNN")
+
+    cnn.compile(
+        optimizer="nadam",
+        loss="binary_crossentropy",
+        metrics=[
+            "accuracy",
+            AUC(curve="ROC", name="auroc"),
+            AUC(curve="PR", name="auprc")
+        ]
+    )
+    return cnn

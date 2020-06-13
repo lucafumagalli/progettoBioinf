@@ -3,6 +3,8 @@ from sklearn.impute import KNNImputer
 from sklearn.preprocessing import RobustScaler
 import pandas as pd
 import os
+from ucsc_genomes_downloader import Genome
+
 
 def retrieving_data(cell_line, window_size=200):
     try:
@@ -40,17 +42,32 @@ def retrieving_data(cell_line, window_size=200):
     # promoters_epigenomes[promoters_epigenomes.columns] = RobustScaler().fit_transform(promoters_epigenomes)
     # enhancers_epigenomes[enhancers_epigenomes.columns] = RobustScaler().fit_transform(enhancers_epigenomes)
 
-    promoters_epigenomes = promoters_epigenomes.values
-    enhancers_epigenomes = enhancers_epigenomes.values
+    # promoters_epigenomes = promoters_epigenomes.values
+    # enhancers_epigenomes = enhancers_epigenomes.values
+
+    # epigenomes = {
+    #     "promoters": pd.DataFrame(promoters_epigenomes),
+    #     "enhancers": pd.DataFrame(enhancers_epigenomes)
+    # }
+
+    # labels = {
+    #     "promoters": pd.DataFrame(promoters_labels),
+    #     "enhancers": pd.DataFrame(enhancers_labels)
+    # }
 
     epigenomes = {
-        "promoters": pd.DataFrame(promoters_epigenomes),
-        "enhancers": pd.DataFrame(enhancers_epigenomes)
+        "promoters": promoters_epigenomes,
+        "enhancers": enhancers_epigenomes
     }
 
     labels = {
-        "promoters": pd.DataFrame(promoters_labels),
-        "enhancers": pd.DataFrame(enhancers_labels)
+        "promoters": promoters_labels,
+        "enhancers": enhancers_labels
     }
 
+
     return epigenomes, labels
+
+
+def get_sequence():
+    return Genome('hg19')

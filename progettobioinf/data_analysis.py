@@ -206,7 +206,7 @@ def get_top_most_different_tuples(epigenomes, labels, cell_line):
         fig.tight_layout()
         plt.savefig(cell_line + '/top_most_different.png')
 
-def get_tasks(epigenomes, labels):
+def get_tasks(epigenomes, sequence, labels):
     tasks = {
         "x":[
             *[
@@ -238,13 +238,13 @@ def get_tasks(epigenomes, labels):
 def pca(x:np.ndarray, n_components:int=2)->np.ndarray:
     return PCA(n_components=n_components, random_state=42).fit_transform(x)
 
-def pca_plot(epigenomes, labels, cell_line):
+def pca_plot(epigenomes, labels, sequence, cell_line):
     colors = np.array([
         "tab:blue",
         "tab:orange",
     ])
 
-    xs, ys, titles = get_tasks(epigenomes, labels)
+    xs, ys, titles = get_tasks(epigenomes, sequence, labels)
 
     fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(32, 16))
     for x, y, title, axis in tqdm(zip(xs, ys, titles, axes.flatten()), desc="Computing PCAs", total=len(xs)):
@@ -266,7 +266,7 @@ def tsne_plot(epigenomes, labels, cell_line):
     ])
 
     xs, ys, titles = get_tasks(epigenomes, labels)
-    for perplexity in tqdm((30, 40), desc="Running perplexities"):
+    for perplexity in tqdm((30, 40, 50, 100, 500, 5000), desc="Running perplexities"):
         fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(40, 20))
         for x, y, title, axis in tqdm(zip(xs, ys, titles, axes.flatten()), desc="Computing TSNEs", total=len(xs)):
             axis.scatter(*ulyanov_tsne(x, perplexity=perplexity).T, s=1, color=colors[y])

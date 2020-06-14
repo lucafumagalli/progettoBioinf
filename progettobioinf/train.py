@@ -117,7 +117,7 @@ def train_sequence(epigenomes, labels, genome, cell_line, region, models):
                 steps_per_epoch=train.steps_per_epoch,
                 validation_data=test,
                 validation_steps=test.steps_per_epoch,
-                epochs=1000,
+                epochs=10,
                 shuffle=True,
                 verbose=False,
                 callbacks=[

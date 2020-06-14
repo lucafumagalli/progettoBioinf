@@ -77,7 +77,7 @@ def get_sequence2(epigenomes, region):
     genome = Genome('hg19')
     sequences = {
         region: to_dataframe(
-            flat_one_hot_encode(genome, data[:50000], window_size),
+            flat_one_hot_encode(genome, data, window_size),
             window_size
         )
         for region, data in epigenomes.items()

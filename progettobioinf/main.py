@@ -1,20 +1,20 @@
 from models import decision_tree, ffnn, mlp, random_forest, perceptron, cnn, set_shape
-from retrieving_data import retrieving_data, get_sequence
+from retrieving_data import retrieving_data, get_sequence, get_sequence2
 from data_analysis import *
 from train import train, train_sequence
-from result import barplot
+from result import barplot, wilcoxon_test
 
 if __name__ == "__main__":
-    cell_line = 'A549'
+    cell_line = 'H1'
     models = []
     kwargs = []
     cnnmodels = []
     epigenomes, labels = retrieving_data(cell_line)
-    class_rate_hist(epigenomes, labels, cell_line)
-    drop_constant_features(epigenomes)
-    robust_zscoring(epigenomes)
-    run_correlation_tests(epigenomes, labels)
-    scores = extremely_correlated(epigenomes)
+    # class_rate_hist(epigenomes, labels, cell_line)
+    # drop_constant_features(epigenomes)
+    # robust_zscoring(epigenomes)
+    # run_correlation_tests(epigenomes, labels)
+    # scores = extremely_correlated(epigenomes)
     # seaborn_plot_most_correlated(epigenomes, labels, scores, cell_line)
     # seaborn_plot_least_correlated(epigenomes, labels, scores, cell_line)
     # get_top_most_different(epigenomes, labels, cell_line)
@@ -35,9 +35,15 @@ if __name__ == "__main__":
     # df_enhancers = train(epigenomes, labels, models, kwargs, 'enhancers', cell_line)
     # barplot(df_promoters, cell_line, 'promoters')
     # barplot(df_enhancers, cell_line, 'enhancers')
+    # print('Wilcoxon enhancers:')
+    # wilcoxon_test(df_enhancers)
+    # print('Wilcoxon promoters:')
+    # wilcoxon_test(df_promoters)
+    get_sequence2(epigenomes, 'promoters')
 
-    genome = get_sequence()
-    cnnmodel = cnn()
-    cnnmodels.append(cnnmodel)
-    df_cnn_promoters = train_sequence(epigenomes, labels, genome, cell_line, 'promoters', cnnmodels)
-    barplot(df_cnn_promoters, cell_line, 'promoters')
+
+    # genome = get_sequence()
+    # cnnmodel = cnn()
+    # cnnmodels.append(cnnmodel)
+    # df_cnn_promoters = train_sequence(epigenomes, labels, genome, cell_line, 'promoters', cnnmodels)
+    # barplot(df_cnn_promoters, cell_line, 'promoters')

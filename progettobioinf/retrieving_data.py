@@ -3,6 +3,7 @@ from sklearn.impute import KNNImputer
 from sklearn.preprocessing import RobustScaler
 import pandas as pd
 import os
+import numpy as np
 from ucsc_genomes_downloader import Genome
 
 
@@ -65,9 +66,46 @@ def retrieving_data(cell_line, window_size=200):
         "enhancers": enhancers_labels
     }
 
-
     return epigenomes, labels
 
 
 def get_sequence():
     return Genome('hg19')
+
+def get_sequence2(epigenomes, region):
+    window_size = 200
+    genome = Genome('hg19')
+    sequences = {
+        region: to_dataframe(
+            flat_one_hot_encode(genome, data[:50000], window_size),
+            window_size
+        )
+        for region, data in epigenomes.items()
+    }
+
+
+from keras_bed_sequence import BedSequence
+def one_hot_encode(genome:Genome, data:pd.DataFrame, nucleotides:str="actg")->np.ndarray:
+    return np.array(BedSequence(
+        genome,
+        bed=to_bed(data),
+        nucleotides=nucleotides,
+        batch_size=1
+    ))
+
+def to_bed(data:pd.DataFrame)->pd.DataFrame:
+    """Return bed coordinates from given dataset."""
+    return data.reset_index()[data.index.names]
+
+def flat_one_hot_encode(genome:Genome, data:pd.DataFrame, window_size:int, nucleotides:str="actg")->np.ndarray:
+    return one_hot_encode(genome, data, nucleotides).reshape(-1, window_size*4).astype(int)
+
+def to_dataframe(x:np.ndarray, window_size:int, nucleotides:str="actg")->pd.DataFrame:
+    return pd.DataFrame(
+        x,
+        columns = [
+            f"{i}{nucleotide}"
+            for i in range(window_size)
+            for nucleotide in nucleotides
+        ]
+    )

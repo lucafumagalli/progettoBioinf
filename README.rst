@@ -14,7 +14,7 @@ get slightly different results, here's three of them:
 
 Progetto di bioinformatica
 
-.. |travis| image:: https://travis-ci.org/lucafumagalli/progettoBioinf.png
+.. |travis| image:: https://travis-ci.org/lucafumagalli/progettoBioinf.png?branch=master
    :target: https://travis-ci.org/lucafumagalli/progettoBioinf
    :alt: Travis CI build
 

@@ -72,6 +72,7 @@ def retrieving_data(cell_line, window_size=200):
 def get_sequence():
     return Genome('hg19')
 
+
 def get_sequence2(epigenomes, region):
     window_size = 200
     genome = Genome('hg19')
@@ -82,6 +83,7 @@ def get_sequence2(epigenomes, region):
         )
         for region, data in epigenomes.items()
     }
+    return sequences
 
 
 from keras_bed_sequence import BedSequence

@@ -41,8 +41,8 @@ def precomputed(results, model:str, holdout:int)->bool:
 def train(epigenomes, labels, models, kwargs, region, cell_line):
     epigenomes = epigenomes[region].values
     labels = labels[region]
-    print(labels)
-    splits = 3
+
+    splits = 5
     holdouts = StratifiedShuffleSplit(n_splits=splits, test_size=0.2, random_state=42)
 
     if os.path.exists(cell_line + "/results_" + region + ".json"):
@@ -117,7 +117,7 @@ def train_sequence(epigenomes, labels, genome, cell_line, region, models):
                 steps_per_epoch=train.steps_per_epoch,
                 validation_data=test,
                 validation_steps=test.steps_per_epoch,
-                epochs=10,
+                epochs=100,
                 shuffle=True,
                 verbose=False,
                 callbacks=[

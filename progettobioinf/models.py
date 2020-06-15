@@ -11,14 +11,13 @@ from tensorflow.keras.layers import Conv2D, Reshape
 from tensorflow.keras.metrics import AUC
 
 
-splits = 3
-holdouts = StratifiedShuffleSplit(n_splits=splits, test_size=0.2, random_state=42)
-
 shape_epigenomes = 0
 
-def set_shape(epigenomes):
+def set_shape(epigenomes, region):
     global shape_epigenomes
-    shape_epigenomes = epigenomes["promoters"].shape[1]
+    shape_epigenomes = epigenomes[region].shape[1]
+    print(str(shape_epigenomes))
+
 
 ####### PERCEPTRON #######
 def perceptron():

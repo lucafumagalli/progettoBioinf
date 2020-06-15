@@ -12,6 +12,8 @@ from sklearn.metrics.pairwise import euclidean_distances
 from sklearn.decomposition import PCA
 from MulticoreTSNE import MulticoreTSNE as UTSNE
 from multiprocessing import cpu_count
+from prince import MFA
+
 
 p_value_threshold = 0.01
 correlation_threshold = 0.05
@@ -206,7 +208,8 @@ def get_top_most_different_tuples(epigenomes, labels, cell_line):
         fig.tight_layout()
         plt.savefig(cell_line + '/top_most_different.png')
 
-def get_tasks(epigenomes, sequence, labels):
+
+def get_tasks(epigenomes, labels):
     tasks = {
         "x":[
             *[
@@ -238,13 +241,13 @@ def get_tasks(epigenomes, sequence, labels):
 def pca(x:np.ndarray, n_components:int=2)->np.ndarray:
     return PCA(n_components=n_components, random_state=42).fit_transform(x)
 
-def pca_plot(epigenomes, labels, sequence, cell_line):
+def pca_plot(epigenomes, labels, cell_line):
     colors = np.array([
         "tab:blue",
         "tab:orange",
     ])
 
-    xs, ys, titles = get_tasks(epigenomes, sequence, labels)
+    xs, ys, titles = get_tasks(epigenomes, labels)
 
     fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(32, 16))
     for x, y, title, axis in tqdm(zip(xs, ys, titles, axes.flatten()), desc="Computing PCAs", total=len(xs)):

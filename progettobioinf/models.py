@@ -20,7 +20,7 @@ def set_shape(epigenomes, region):
 
 
 ####### PERCEPTRON #######
-def perceptron():
+def perceptron(epochs, batch_size):
     perceptron = Sequential([
         Input(shape=(shape_epigenomes, )),
         Dense(1, activation="sigmoid")
@@ -32,8 +32,8 @@ def perceptron():
     )
 
     kwargs = dict(
-        epochs=600,
-        batch_size=1024,
+        epochs=epochs,
+        batch_size=batch_size,
         validation_split=0.1,
         shuffle=True,
         verbose=False,
@@ -45,10 +45,10 @@ def perceptron():
     return perceptron, kwargs
 
 ###### DECISION TREE #####
-def decision_tree():
+def decision_tree(max_depth):
     decision_tree = DecisionTreeClassifier(
         criterion="gini",
-        max_depth=50,
+        max_depth=max_depth,
         random_state=42,
         class_weight="balanced"
     )
@@ -56,7 +56,7 @@ def decision_tree():
     return decision_tree, kwargs
 
 ### MLP ###
-def mlp():
+def mlp(epochs, batch_size):
     mlp = Sequential([
         Input(shape=(shape_epigenomes, )),
         Dense(128, activation="relu"),
@@ -71,8 +71,8 @@ def mlp():
     )
 
     kwargs = dict(
-        epochs=10,
-        batch_size=1024,
+        epochs=epochs,
+        batch_size=batch_size,
         validation_split=0.1,
         shuffle=True,
         verbose=False,
@@ -97,7 +97,7 @@ def random_forest():
     return random_forest, kwargs
  
  ### FFNN ###
-def ffnn():
+def ffnn(epochs, batch_size):
     ffnn = Sequential([
         Input(shape=(shape_epigenomes, )),
         Dense(256, activation="relu"),
@@ -117,8 +117,8 @@ def ffnn():
     )
 
     kwargs = dict(
-        epochs=10,
-        batch_size=1024,
+        epochs=epochs,
+        batch_size=batch_size,
         validation_split=0.1,
         shuffle=True,
         verbose=False,

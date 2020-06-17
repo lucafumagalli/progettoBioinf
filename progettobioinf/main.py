@@ -23,13 +23,13 @@ if __name__ == "__main__":
 
     for region in ['enhancers', 'promoters']:
         set_shape(epigenomes, region)
-        modelperc, kwargsperc = perceptron(100, 1024)
+        modelperc, kwargsperc = perceptron(500, 1024)
         modeltree, kwargstree = decision_tree(50)
-        modelmlp, kwargsmlp = mlp(100, 1024)
-        modelffnn, kwargsffnn = ffnn(100, 1024)
+        modelmlp, kwargsmlp = mlp(500, 1024)
+        modelffnn, kwargsffnn = ffnn(500, 1024)
         modelrf, kwargsrf = random_forest()
-        models.extend([modelperc, modelffnn])
-        kwargs.extend([kwargsperc, kwargsffnn])
+        models.extend([modelperc, modeltree, modelmlp, modelffnn])
+        kwargs.extend([kwargsperc, kwargstree, kwargsmlp, kwargsffnn])
 
         train_result = train(epigenomes, labels, models, kwargs, region, cell_line)
         barplot(train_result, cell_line, region)

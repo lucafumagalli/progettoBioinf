@@ -269,7 +269,7 @@ def tsne_plot(epigenomes, labels, cell_line):
     ])
 
     xs, ys, titles = get_tasks(epigenomes, labels)
-    for perplexity in tqdm((30, 40, 50, 100, 500, 1000), desc="Running perplexities"):
+    for perplexity in tqdm((1, 50), desc="Running perplexities"):
         fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(40, 20))
         for x, y, title, axis in tqdm(zip(xs, ys, titles, axes.flatten()), desc="Computing TSNEs", total=len(xs)):
             axis.scatter(*ulyanov_tsne(x, perplexity=perplexity).T, s=1, color=colors[y])

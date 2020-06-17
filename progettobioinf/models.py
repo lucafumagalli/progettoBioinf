@@ -42,6 +42,7 @@ def perceptron(epochs, batch_size):
             ktqdm(leave_outer=False)
         ]
     )
+
     return perceptron, kwargs
 
 ###### DECISION TREE #####

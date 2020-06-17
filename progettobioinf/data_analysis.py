@@ -187,9 +187,9 @@ def get_top_most_different(epigenomes, labels, cell_line):
 
             axis.set_title(column)
         fig.tight_layout()
-        plt.savefig(cell_line + '/feature_distribution.png')
+        plt.savefig(cell_line + '/feature_distribution_' + region + '.png')
 
-def get_top_most_different_tuples(epigenomes, labels, cell_line):
+def get_top_most_different_tuples(epigenomes, cell_line):
     top_number = 5
     for region, x in epigenomes.items():
         dist = euclidean_distances(x.T)
@@ -206,7 +206,7 @@ def get_top_most_different_tuples(epigenomes, labels, cell_line):
                 x[column][mask].hist(ax=axis, bins=20, alpha=0.5)
             axis.set_title(f"{column_i} and {column_j}")
         fig.tight_layout()
-        plt.savefig(cell_line + '/top_most_different.png')
+        plt.savefig(cell_line + '/top_most_different_' + region + '.png')
 
 
 def get_tasks(epigenomes, labels):
@@ -269,7 +269,7 @@ def tsne_plot(epigenomes, labels, cell_line):
     ])
 
     xs, ys, titles = get_tasks(epigenomes, labels)
-    for perplexity in tqdm((30, 40, 50, 100, 500, 5000), desc="Running perplexities"):
+    for perplexity in tqdm((30, 40, 50, 100, 500, 1000), desc="Running perplexities"):
         fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(40, 20))
         for x, y, title, axis in tqdm(zip(xs, ys, titles, axes.flatten()), desc="Computing TSNEs", total=len(xs)):
             axis.scatter(*ulyanov_tsne(x, perplexity=perplexity).T, s=1, color=colors[y])

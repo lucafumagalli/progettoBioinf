@@ -7,4 +7,4 @@ before_install:
 - pip install ucsc-genomes-downloader==1.1.18
 - pip install epigenomic-dataset==1.1.4
 script:
-- pytest -s --cov
+- pytest

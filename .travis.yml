@@ -7,8 +7,8 @@ before_install:
 - pip install ucsc-genomes-downloader==1.1.18
 - pip install epigenomic-dataset==1.1.4
 - pip install sklearn
-- pip install keras_tqdm
-- pip install keras_mixed_sequence 
-- pip install keras_bed_sequence
+- pip install keras-tqdm==2.0.1
+- pip install keras-mixed-sequence==1.0.6 
+- pip install keras-bed-sequence==1.1.1
 script:
 - pytest

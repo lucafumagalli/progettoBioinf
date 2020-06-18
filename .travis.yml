@@ -1,14 +1,5 @@
 language: python
 before_install:
-- pip install tensorflow==2.0
-- pip install tqdm==4.45.0
-- pip install sanitize_ml_labels
-- pip install compress-json==1.0.3
-- pip install ucsc-genomes-downloader==1.1.18
-- pip install epigenomic-dataset==1.1.4
-- pip install sklearn
-- pip install keras_tqdm
-- pip install keras_mixed_sequence 
-- pip install keras_bed_sequence
+- pip install -r requirements.txt
 script:
 - pytest

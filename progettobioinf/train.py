@@ -42,7 +42,7 @@ def train(epigenomes, labels, models, kwargs, region, cell_line):
     epigenomes = epigenomes[region].values
     labels = labels[region]
 
-    splits = 3
+    splits = 10
     holdouts = StratifiedShuffleSplit(n_splits=splits, test_size=0.2, random_state=42)
 
     if os.path.exists(cell_line + "/results_" + region + ".json"):

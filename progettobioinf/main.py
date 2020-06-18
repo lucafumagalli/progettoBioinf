@@ -5,7 +5,7 @@ from train import train, train_sequence
 from result import barplot, wilcoxon_test
 
 if __name__ == "__main__":
-    cell_line = 'H1'
+    cell_line = 'A549'
     models = []
     kwargs = []
     epigenomes, labels = retrieving_data(cell_line)
@@ -24,19 +24,20 @@ if __name__ == "__main__":
     for region in ['enhancers', 'promoters']:
         set_shape(epigenomes, region)
         modelperc, kwargsperc = perceptron(500, 1024)
-        modeltree, kwargstree = decision_tree(200)
+        modeltree, kwargstree = decision_tree(500)
         modelmlp, kwargsmlp = mlp(500, 1024)
         modelffnn, kwargsffnn = ffnn(500, 1024)
-        modelrf, kwargsrf = random_forest()
-        models.extend([modelperc, modeltree, modelmlp, modelffnn])
-        kwargs.extend([kwargsperc, kwargstree, kwargsmlp, kwargsffnn])
-
+        models.extend([modeltree, modelperc, modelmlp, modelffnn])
+        kwargs.extend([kwargstree, kwargsperc, kwargsmlp, kwargsffnn])
         train_result = train(epigenomes, labels, models, kwargs, region, cell_line)
         barplot(train_result, cell_line, region)
         models.clear()
         kwargs.clear()
         print('Wilcoxon ' + region + ':')
         wilcoxon_test(train_result, 'FFNN', 'DecisionTreeClassifier')
-
-        
+        wilcoxon_test(train_result, 'FFNN', 'Perceptron')
+        wilcoxon_test(train_result, 'FFNN', 'MLP')
+        wilcoxon_test(train_result, 'Perceptron', 'DecisionTreeClassifier')
+        wilcoxon_test(train_result, 'Perceptron', 'MLP')
+        wilcoxon_test(train_result, 'MLP', 'DecisionTreeClassifier')
 

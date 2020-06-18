@@ -39,10 +39,6 @@ def retrieving_data(cell_line, window_size=200):
     promoters_epigenomes[promoters_epigenomes.columns] = KNNImputer(n_neighbors=promoters_epigenomes.shape[0]//10).fit_transform(promoters_epigenomes)
     enhancers_epigenomes[enhancers_epigenomes.columns] = KNNImputer(n_neighbors=enhancers_epigenomes.shape[0]//10).fit_transform(enhancers_epigenomes)
 
-    # Robust normalization of the values
-    # promoters_epigenomes[promoters_epigenomes.columns] = RobustScaler().fit_transform(promoters_epigenomes)
-    # enhancers_epigenomes[enhancers_epigenomes.columns] = RobustScaler().fit_transform(enhancers_epigenomes)
-
     epigenomes = {
         "promoters": promoters_epigenomes,
         "enhancers": enhancers_epigenomes
@@ -55,12 +51,7 @@ def retrieving_data(cell_line, window_size=200):
 
     return epigenomes, labels
 
-
-def get_sequence():
-    return Genome('hg19')
-
-
-def get_sequence2(epigenomes, region):
+def get_sequence(epigenomes, region):
     window_size = 200
     genome = Genome('hg19')
     sequences = {

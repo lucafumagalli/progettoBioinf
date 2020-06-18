@@ -60,8 +60,8 @@ def decision_tree(max_depth):
 def mlp(epochs, batch_size):
     mlp = Sequential([
         Input(shape=(shape_epigenomes, )),
+        Dense(256, activation="relu"),
         Dense(128, activation="relu"),
-        Dense(64, activation="relu"),
         Dense(32, activation="relu"),
         Dense(1, activation="sigmoid")
     ], "MLP")
@@ -100,17 +100,19 @@ def random_forest():
  ### FFNN ###
 def ffnn(epochs, batch_size):
     ffnn = Sequential([
-        Input(shape=(shape_epigenomes, )),
-        Dense(256, activation="relu"),
-        Dense(128),
-        BatchNormalization(),
-        Activation("relu"),
-        Dense(64, activation="relu"),
-        Dropout(0.3),
-        Dense(32, activation="relu"),
-        Dense(16, activation="relu"),
-        Dense(1, activation="sigmoid")
-    ], "FFNN")
+            Input(shape=(shape_epigenomes,)),
+            Dense(512, activation="relu"),
+            Dense(512, activation="relu"),
+            BatchNormalization(),
+            Dropout(0.4),
+            Dense(256, activation="relu"),
+            Dense(128, activation="relu"),
+            BatchNormalization(),
+            Dense(64, activation="relu"),
+            Dropout(0.4),
+            Dense(32, activation="relu"),
+            Dense(1, activation="sigmoid")
+        ], "FFNN")
 
     ffnn.compile(
         optimizer="nadam",
@@ -135,16 +137,16 @@ def cnn():
     cnn = Sequential([
         Input(shape=(200, 4)),
         Reshape((200, 4, 1)),
-        Conv2D(64, kernel_size=(10, 2), activation="relu"),
-        Conv2D(64, kernel_size=(10, 2), activation="relu"),
-        Dropout(0.3),
-        Conv2D(32, kernel_size=(10, 2), strides=(2, 1), activation="relu"),
-        Conv2D(32, kernel_size=(10, 1), activation="relu"),
-        Conv2D(32, kernel_size=(10, 1), activation="relu"),
-        Dropout(0.3),
+        Conv2D(128, kernel_size=(10, 2), activation="relu"),
+        Conv2D(128, kernel_size=(10, 2), activation="relu"),
+        Dropout(0.4),
+        Conv2D(64, kernel_size=(10, 2), strides=(2, 1), activation="relu"),
+        Conv2D(64, kernel_size=(10, 1), activation="relu"),
+        Conv2D(64, kernel_size=(10, 1), activation="relu"),
+        Dropout(0.4),
         Flatten(),
+        Dense(64, activation="relu"),
         Dense(32, activation="relu"),
-        Dense(16, activation="relu"),
         Dense(1, activation="sigmoid")
     ], "CNN")
 
@@ -154,7 +156,7 @@ def cnn():
         metrics=[
             "accuracy",
             AUC(curve="ROC", name="auroc"),
-            AUC(curve="PR", name="auprc")
+            AUC(curve="PR", name="auprc"),   
         ]
     )
     return cnn

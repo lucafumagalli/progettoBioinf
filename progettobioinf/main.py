@@ -14,12 +14,12 @@ if __name__ == "__main__":
     robust_zscoring(epigenomes)
     run_correlation_tests(epigenomes, labels)
     scores = extremely_correlated(epigenomes)
-    seaborn_plot_most_correlated(epigenomes, labels, scores, cell_line)
-    seaborn_plot_least_correlated(epigenomes, labels, scores, cell_line)
-    get_top_most_different(epigenomes, labels, cell_line)
-    get_top_most_different_tuples(epigenomes, cell_line)
-    pca_plot(epigenomes, labels, cell_line)
-    tsne_plot(epigenomes, labels, cell_line)
+    # seaborn_plot_most_correlated(epigenomes, labels, scores, cell_line)
+    # seaborn_plot_least_correlated(epigenomes, labels, scores, cell_line)
+    # get_top_most_different(epigenomes, labels, cell_line)
+    # get_top_most_different_tuples(epigenomes, cell_line)
+    #pca_plot(epigenomes, labels, cell_line)
+    #tsne_plot(epigenomes, labels, cell_line)
 
     for region in ['enhancers', 'promoters']:
         set_shape(epigenomes, region)
@@ -38,6 +38,5 @@ if __name__ == "__main__":
         print('Wilcoxon ' + region + ':')
         wilcoxon_test(train_result, 'FFNN', 'DecisionTreeClassifier')
 
-    
         
 

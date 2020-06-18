@@ -43,19 +43,6 @@ def retrieving_data(cell_line, window_size=200):
     # promoters_epigenomes[promoters_epigenomes.columns] = RobustScaler().fit_transform(promoters_epigenomes)
     # enhancers_epigenomes[enhancers_epigenomes.columns] = RobustScaler().fit_transform(enhancers_epigenomes)
 
-    # promoters_epigenomes = promoters_epigenomes.values
-    # enhancers_epigenomes = enhancers_epigenomes.values
-
-    # epigenomes = {
-    #     "promoters": pd.DataFrame(promoters_epigenomes),
-    #     "enhancers": pd.DataFrame(enhancers_epigenomes)
-    # }
-
-    # labels = {
-    #     "promoters": pd.DataFrame(promoters_labels),
-    #     "enhancers": pd.DataFrame(enhancers_labels)
-    # }
-
     epigenomes = {
         "promoters": promoters_epigenomes,
         "enhancers": enhancers_epigenomes

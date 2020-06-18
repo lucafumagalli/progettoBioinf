@@ -6,5 +6,6 @@ before_install:
 - pip install compress-json==1.0.3
 - pip install ucsc-genomes-downloader==1.1.18
 - pip install epigenomic-dataset==1.1.4
+- pip install sklearn
 script:
 - pytest
